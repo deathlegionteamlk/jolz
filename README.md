@@ -1,8 +1,8 @@
 # jolz
 
-> A full-featured Linux terminal in your pocket.
+> A Linux terminal forged in darkness.
 
-jolz is a native Android terminal emulator and Linux environment. Run a real shell, install real packages with `pkg`, and extend it with plugins. Built for everyone who lives in the terminal.
+jolz is a native Android terminal emulator and Linux environment with a `pkg` package manager and plugin system. Built for those who dwell in the command line.
 
 **Developed by:** `lucifer x jela` | **Team:** `deathlegion` | **Site:** https://jolz.deathlegion.site
 
@@ -10,11 +10,11 @@ jolz is a native Android terminal emulator and Linux environment. Run a real she
 
 ## Download
 
-**Latest APK (v1.1.0, 3.9 MB):** [jolz-1.1.0.apk](https://github.com/deathlegionteamlk/jolz/releases/download/v1.1.0/jolz-1.1.0.apk)
+**Latest APK (v1.2.0, 4.0 MB):** [jolz-1.2.0.apk](https://github.com/deathlegionteamlk/jolz/releases/download/v1.2.0/jolz-1.2.0.apk)
 
-Or grab it from the [Releases page](https://github.com/deathlegionteamlk/jolz/releases).
+Or from the [Releases page](https://github.com/deathlegionteamlk/jolz/releases).
 
-**Or download from the official site:** https://jolz.deathlegion.site/jolz-1.1.0.apk
+**Mirror (CDN):** https://jolz.deathlegion.site/jolz-1.2.0.apk
 
 ---
 
@@ -23,184 +23,111 @@ Or grab it from the [Releases page](https://github.com/deathlegionteamlk/jolz/re
 1. Download the APK to your Android device.
 2. Open it (enable "Install from unknown sources" if prompted).
 3. Tap **Install**.
-4. Open **jolz** and you're in a Linux shell.
+4. Open **jolz** — you'll see the welcome screen.
 
-> Works on **Android 5.0 (Lollipop, API 21) and newer**, including all versions of Android 7, 8, 9, 10, 11, 12, 13, 14, and 15. The APK is signed with v1 + v2 + v3 signature schemes so it installs cleanly on every Android version.
-
-**Supported ABIs:** `arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64`
+> Works on **Android 5.0 (API 21) and newer**. Signed with v1 + v2 + v3 signature schemes.
+> **All ABIs:** arm64-v8a, armeabi-v7a, x86, x86_64
 
 ---
 
-## What's new in v1.1.0
+## What's new in v1.2.0
 
-### Fixed
-- **Black screen on launch** — shell path now defaults to `/system/bin/sh` (always exists on Android)
-- **Crash on first install** — heavy initialization deferred to background thread
-- All init wrapped in try-catch so the app never crashes on startup
-- Better error messages when shell binary is missing
+### Fixed (crash on launch)
+- **Theme**: switched from `Theme.MaterialComponents.NoActionBar` to `Theme.AppCompat.NoActionBar` for maximum compatibility
+- **Layouts**: removed all `AppBarLayout` references (replaced with plain `Toolbar`) to avoid material view inflation crashes
+- **Manifest**: removed deprecated `android:sharedUserId` attribute (causes issues on Android 10+)
+- **TerminalView.loadPrefs()**: null-safe — won't crash if App/prefs not yet initialized
+- **TerminalSession constructor**: null-safe scrollback loading
+- **All init wrapped in try-catch** throughout the app
 
 ### Added
-- **File Explorer** activity — browse files in jolz home directory
-- **Home screen widget** — tap to open terminal
-- **5 new color schemes**: One Dark, Gruvbox Dark, Tokyo Night, Catppuccin, Rose Pine (total: 11)
-- **24+ built-in commands**: `sysinfo`, `netinfo`, `meminfo`, `cpuinfo`, `diskinfo`, `battery`, `device`, `uptime`, `ps`, `mounts`, `jolz-info`, `jolz-version`, `jolz-help`, `echo`, `date`, `whoami`, `uname`, `which`, `ls-jolz`, `cat-jolz`, `mkdir-jolz`, `rm-jolz`, `touch-jolz`, `history-clear`, `exit`
-- **Haptic feedback** utilities — vibrate on key press, bell, success/error patterns
-- **App shortcuts** — long-press launcher icon for quick actions (pkg, new session, settings)
-- **Share & clipboard** utilities — share text/files, copy/paste
-- **App list utility** — list all installed apps with details
-- **Scheduler utils** — cron-style task scheduling and duration parsing
-- **Animated welcome screen** with ASCII art logo on every session start
-- **Proper launcher icons** (PNG, all densities: mdpi/hdpi/xhdpi/xxhdpi/xxxhdpi)
+- **3 new utility classes**: `BatteryUtils`, `PowerUtils`, `SystemSettingsUtils`
+- **System settings shortcuts**: open WiFi, location, display, sound, battery, storage, airplane, accessibility, developer options
+- **Power management**: wake lock acquire/release, power save mode detection, thermal status
+- **Battery utilities**: detailed battery info (level, status, plugged, temperature, voltage, health, technology, capacity, charge counter, current)
+- **Overlay permission** request utility
+- **Write settings** permission request utility
+- **New logo**: sharingan-inspired ring + flame + `$ jolz` text in red/green gradient
+- **New launcher icons**: darker aesthetic, all densities (mdpi→xxxhdpi)
 
 ### Improved
-- Error handling throughout the app
-- TerminalSession shows helpful welcome text with command examples
-- TerminalExec validates shell binary exists before launching
-- MainActivity wraps all initialization in try-catch
-- App.onCreate defers heavy init to main handler
+- 155+ total features
+- 76 Java source files
+- 8 activities
+- Comprehensive packages list on the website (120+ packages)
 
 ---
 
-## What's inside
+## Features
 
-### Terminal emulator core
-- Native VT/ANSI parser (no JavaScript, no WebView — pure Java)
-- 256-color + truecolor (24-bit) support
-- Cursor styles, blinking, scrollback (default 2000 lines)
+### Terminal emulator
+- Native VT/ANSI parser (pure Java, no WebView)
+- 256-color + truecolor support
+- Cursor styles, blinking, scrollback (2000 lines)
 - Mouse reporting, bracketed paste
-- Resizable on the fly, pinch-to-zoom font size
+- Pinch-to-zoom font size
 - Long-press context menu, double-tap to paste
-- **Animated welcome screen** with ASCII art logo and command examples
+- Animated welcome screen with ASCII art
 
 ### Package manager (`pkg`)
-Install other tools and languages directly from the terminal:
-
 ```sh
 pkg update
-pkg install bash
-pkg install python3 ruby node vim neovim git curl wget ssh tmux zsh clang gcc make cmake
+pkg install bash python3 ruby node vim neovim git curl wget ssh tmux zsh clang gcc make cmake
 pkg search neovim
-pkg info python3
 pkg upgrade
 pkg list installed
 ```
 
-Other commands: `remove`, `update`, `upgrade`, `search`, `list`, `info`, `depends`, `rdepends`, `files`, `mirror <list|add|remove|select>`, `clean`, `hold`, `unhold`, `outdated`, `stats`, `export`, `import`, `self`, `help`, `version`.
-
-Features: dependency resolution with topological sort, multiple mirrors, package signatures verification (SHA-256), parallel downloads, backup & restore of installed packages.
+Commands: install, remove, update, upgrade, search, list, info, depends, rdepends, files, mirror, clean, hold, unhold, outdated, stats, export, import, self, help, version.
 
 ### Plugin system (9 types)
-- **Theme** — change terminal appearance (background, foreground, accent)
-- **Font** — load custom .ttf/.otf fonts
-- **ColorScheme** — ship your own 16-color palette
-- **Boot** — run shell scripts on device startup
-- **KeyBind** — register custom key bindings
-- **DeviceApi** — call Android APIs (vibrate, location, flashlight, sensors, battery, clipboard, notifications)
-- **Command** — register custom shell commands
-- **Scheduler** — run tasks on interval/cron/once
-- **Hook** — listen for app events
+Theme, Font, ColorScheme, Boot, KeyBind, DeviceApi, Command, Scheduler, Hook.
 
-Plugins live in `$JOLZ_HOME/plugins/installed/<id>/plugin.json`. Each plugin declares its required permissions; the runtime enforces a 29-permission sandbox with CPU, memory, and network budgets.
+29 plugin permissions with CPU/memory/network sandboxing.
 
 ### Built-in commands (24+)
-Available without any package installed:
-
-| Command | Description |
-|---|---|
-| `jolz-info` | Show app info |
-| `jolz-version` | Show version |
-| `jolz-help` | Show help |
-| `sysinfo` | System info |
-| `netinfo` | Network info |
-| `meminfo` | Memory info |
-| `cpuinfo` | CPU info |
-| `diskinfo` | Disk usage |
-| `battery` | Battery status |
-| `device` | Device info |
-| `uptime` | Device uptime |
-| `ps` | Process list |
-| `mounts` | Mount points |
-| `echo` | Echo args |
-| `date` | Show date/time |
-| `whoami` | Print user |
-| `uname [-a]` | System name |
-| `which <cmd>` | Locate command |
-| `ls-jolz <dir>` | List files in jolz home |
-| `cat-jolz <file>` | Cat a file |
-| `mkdir-jolz <dir>` | Make directory |
-| `rm-jolz <path>` | Remove path |
-| `touch-jolz <file>` | Touch a file |
-| `history-clear` | Clear history |
-| `exit` | Exit info |
+sysinfo, netinfo, meminfo, cpuinfo, diskinfo, battery, device, uptime, ps, mounts, jolz-info, jolz-version, jolz-help, echo, date, whoami, uname, which, ls-jolz, cat-jolz, mkdir-jolz, rm-jolz, touch-jolz, history-clear, exit.
 
 ### Color schemes (11)
 Dracula, Nord, Solarized Dark, Solarized Light, Monokai, Gotham, One Dark, Gruvbox Dark, Tokyo Night, Catppuccin, Rose Pine.
 
-### File Explorer
-Browse files in the jolz home directory with a native file manager UI. Tap directories to navigate, tap files to see details. Back button navigates up the directory tree.
-
-### Home screen widget
-Add the jolz widget to your home screen for one-tap access to the terminal.
-
-### App shortcuts
-Long-press the jolz launcher icon to access quick actions:
-- **pkg** — open the package manager
-- **New** — start a new terminal session
-- **Settings** — open settings
-
-### Extra keys bar
-Toggleable bar with: `ESC`, `TAB`, `CTRL`, `ALT`, `↑`, `↓`, `←`, `→`, `HOME`, `END`, `PGUP`, `PGDN`, `F1`–`F12`, `-`, `/`, `*`, `DEL`, `ENTER`.
-
-### Sessions
-- Multiple concurrent terminal sessions
-- Persist sessions across app restarts
-- Session switcher activity
+### UI
+- File Explorer activity
+- Home screen widget
+- App shortcuts (long-press launcher)
+- Extra keys bar (Ctrl, Alt, F1-F12, arrows)
+- Multiple sessions with persistence
+- Haptic feedback (vibrate on key, bell, success/error)
+- Share & clipboard utilities
 
 ### System integration
-- Home screen widget (tap to open terminal)
-- App shortcuts (long-press launcher icon)
-- Boot scripts (run automatically on device startup)
-- Foreground service for long-running tasks
-- Crash reports with logcat capture (saved to `crashes/`)
-- Notification channels: default, boot, pkg, plugin, session, error
-
-### Settings
-Appearance (font size, font family, color scheme, theme mode, colors), behavior (wake lock, vibrate, sound, scrollback, shell path, initial command, extra keys, fullscreen, immersive, keep screen on, persistent sessions, bell, swap ctrl/alt, tab completion, boot scripts, history size, encoding), network (mirror, repositories, auto-update, signature verification, parallel downloads, timeout), storage (crash report, log level).
+- Boot scripts (run on device startup)
+- Foreground service
+- Crash reports with logcat
+- Notification channels (default, boot, pkg, plugin, session, error)
+- System settings shortcuts
 
 ---
 
 ## Stats
 
-- **142+** features implemented
-- **3.9 MB** signed APK
-- **75** Java source files (not included in this repo)
+- **155+** features
+- **4.0 MB** signed APK
+- **76** Java source files (private)
 - **11** color schemes
 - **9** plugin types
 - **29** plugin permissions
 - **24+** built-in commands
-- **8** activities (Main, Settings, Plugins, PackageManager, Sessions, Help, About, FileExplorer)
+- **8** activities
 - **1** home screen widget
 - **Android 5.0+** (API 21+)
-- **All ABIs** (arm64, arm, x86, x86_64)
+- **All ABIs**
 
 ---
 
 ## Source code
 
-This repository is **private**. Only the APK release and this README are public. The Java source code is not distributed.
-
-For bug reports, feature requests, or licensing inquiries, contact the deathlegion team at https://jolz.deathlegion.site.
-
----
-
-## Acknowledgements
-
-Built with:
-- AndroidX (AppCompat, RecyclerView, Preference, Lifecycle, Fragment)
-- Material Components for Android
-- A custom VT/ANSI terminal emulator written from scratch in Java
-
-Inspired by Termux, but rewritten from scratch with a focus on the plugin architecture and the deathlegion team's design language.
+This repository is **private**. Only the APK release and this README are public.
 
 ---
 
@@ -208,4 +135,4 @@ Inspired by Termux, but rewritten from scratch with a focus on the plugin archit
 
 Proprietary. Developed by **lucifer x jela** for the **deathlegion team**.
 
-© 2026 deathlegion team. All rights reserved.
+(c) 2026 deathlegion team. All rights reserved.
